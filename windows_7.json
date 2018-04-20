@@ -1,7 +1,7 @@
 {
     "builders": [
         {
-            "vm_name": "Windows_7_x64",
+            "vm_name": "Windows_7_x64.{{ `format` }}",
             "type": "qemu",
             "accelerator":  "kvm",
             "iso_url": "{{user `iso_url`}}",
@@ -38,19 +38,19 @@
         },
         {
             "type": "powershell",
-            "inline": "New-Item -Path C:\\temp -ItemType directory"
+            "inline": ["New-Item -Path C:\\temp -ItemType directory"]
         },
         {
             "type": "powershell",
-            "inline": "(new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/fireeye/flare-vm/master/install.ps1', 'C:\\Temp\\install.ps1')"
+            "inline": ["(new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/Wenzel/flare-vm/master/install.ps1', 'C:\\Temp\\install.ps1')"]
         },
         {
             "type": "powershell",
-            "inline": "powershell.exe -ExecutionPolicy Unrestricted -File C:\\Temp\\install.ps1"
+            "inline": ["powershell.exe -ExecutionPolicy Unrestricted -File C:\\Temp\\install.ps1"]
         },
         {
             "type": "powershell",
-            "inline": "Remove-Item -Recurse C:\\Temp"
+            "inline": ["Remove-Item -Recurse C:\\Temp"]
         },
         {
             "type": "windows-shell",
@@ -59,6 +59,10 @@
         {
             "type": "windows-restart",
             "restart_timeout": "15m"
+        },
+        {
+            "type": "windows-shell",
+            "inline": ["reg add HKLM\\SYSTEM\\CurrentControlSet\\services\\WinRM /v Start /t REG_DWORD /d 4 /f"]
         }
     ],
     "variables": {
