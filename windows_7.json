@@ -63,8 +63,8 @@
     ],
     "variables": {
         "iso_url": "http://care.dlservice.microsoft.com/dl/download/evalx/win7/x64/EN/7600.16385.090713-1255_x64fre_enterprise_en-us_EVAL_Eval_Enterprise-GRMCENXEVAL_EN_DVD.iso",
-        "iso_checksum_type": "md5",
-        "iso_checksum": "1d0d239a252cb53e466d39e752b17c28",
+        "iso_checksum_type": "sha256",
+        "iso_checksum": "2c16c73388a5c02a0ec4cd8b9e5c14ba28b7b45d13d0c9c7d44459feecc0385f",
         "autounattend": "./answer_files/7/Autounattend.xml"
     }
 }
