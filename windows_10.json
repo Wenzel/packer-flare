@@ -1,0 +1,75 @@
+{
+    "builders": [
+        {
+            "vm_name": "Windows_10_x64.{{ `format` }}",
+            "type": "qemu",
+            "accelerator":  "kvm",
+            "iso_url": "{{user `iso_url`}}",
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "iso_checksum_type": "{{user `iso_checksum_type`}}",
+            "disk_size": 60000,
+            "disk_interface": "ide",
+            "net_device": "e1000",
+            "format": "qcow2",
+            "headless": true,
+            "qemuargs": [
+                ["-smp", "2"],
+                ["-m", "4096"]
+            ],
+            "communicator": "winrm",
+            "winrm_username": "vagrant",
+            "winrm_password": "vagrant",
+            "winrm_port": 5985,
+            "winrm_timeout": "4h",
+            "disk_compression": false,
+            "skip_compaction": true,
+            "shutdown_command": "shutdown /s /t 300 /f /d p:4:1 /c \"Packer Shutdown\"",
+            "shutdown_timeout" : "1h",
+            "floppy_files": [
+                "{{user `autounattend`}}",
+                "scripts/fixnetwork.ps1",
+                "scripts/setup_winrm_public.bat"
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "windows-shell",
+            "inline": ["reg ADD HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU /v NoAutoUpdate /t REG_DWORD /d 1 /f"]
+        },
+        {
+            "type": "powershell",
+            "inline": "New-Item -Path C:\\temp -ItemType directory"
+        },
+        {
+            "type": "powershell",
+            "inline": "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Wenzel/flare-vm/master/install.ps1' -OutFile 'C:\\Temp\\install.ps1'"
+        },
+        {
+            "type": "powershell",
+            "inline": "powershell.exe -ExecutionPolicy Unrestricted -File C:\\Temp\\install.ps1"
+        },
+        {
+            "type": "powershell",
+            "inline": "Remove-Item -Recurse C:\\Temp"
+        },
+        {
+            "type": "windows-shell",
+            "inline": ["reg ADD HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU /v NoAutoUpdate /t REG_DWORD /d 0 /f"]
+        },
+        {
+            "type": "windows-restart",
+            "restart_timeout": "15m"
+        },
+        {
+            "type": "windows-shell",
+            "inline": ["reg add HKLM\\SYSTEM\\CurrentControlSet\\services\\WinRM /v Start /t REG_DWORD /d 4 /f"]
+        }
+    ],
+    "variables": {
+        "iso_url": "http://care.dlservice.microsoft.com/dl/download/C/3/9/C399EEA8-135D-4207-92C9-6AAB3259F6EF/10240.16384.150709-1700.TH1_CLIENTENTERPRISEEVAL_OEMRET_X64FRE_EN-US.ISO",
+        "iso_checksum_type": "sha256",
+        "iso_checksum": "9b53e1f6ab6259a05d0e8f42db5baad50b57da34da9312783f7e8bd4ae2cd3ca",
+        "autounattend": "./answer_files/10/Autounattend.xml"
+    }
+}
