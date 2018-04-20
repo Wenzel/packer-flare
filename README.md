@@ -7,4 +7,4 @@ Packer templates to build your FLARE VM from scratch
 
 ## Build
 
-    ./packer build windows_7.json
+    ./packer build windows_10.json

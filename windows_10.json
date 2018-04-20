@@ -39,19 +39,19 @@
         },
         {
             "type": "powershell",
-            "inline": "New-Item -Path C:\\temp -ItemType directory"
+            "inline": ["New-Item -Path C:\\temp -ItemType directory"]
         },
         {
             "type": "powershell",
-            "inline": "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Wenzel/flare-vm/master/install.ps1' -OutFile 'C:\\Temp\\install.ps1'"
+            "inline": ["Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Wenzel/flare-vm/master/install.ps1' -OutFile 'C:\\Temp\\install.ps1'"]
         },
         {
             "type": "powershell",
-            "inline": "powershell.exe -ExecutionPolicy Unrestricted -File C:\\Temp\\install.ps1"
+            "inline": ["powershell.exe -ExecutionPolicy Unrestricted -File C:\\Temp\\install.ps1"]
         },
         {
             "type": "powershell",
-            "inline": "Remove-Item -Recurse C:\\Temp"
+            "inline": ["Remove-Item -Recurse C:\\Temp"]
         },
         {
             "type": "windows-shell",
