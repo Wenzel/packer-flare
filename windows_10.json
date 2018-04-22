@@ -1,7 +1,7 @@
 {
     "builders": [
         {
-            "vm_name": "Windows_10_x64.{{ `format` }}",
+            "vm_name": "Windows_10_x64.qcow2",
             "type": "qemu",
             "accelerator":  "kvm",
             "iso_url": "{{user `iso_url`}}",
@@ -30,6 +30,26 @@
                 "scripts/fixnetwork.ps1",
                 "scripts/setup_winrm_public.bat"
             ]
+        },
+        {
+            "vm_name": "Windows_10_x64.ovf",
+            "type": "virtualbox-iso",
+            "iso_url": "{{user `iso_url`}}",
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "iso_checksum_type": "{{user `iso_checksum_type`}}",
+            "headless": false,
+            "communicator": "winrm",
+            "winrm_username": "vagrant",
+            "winrm_password": "vagrant",
+            "winrm_port": 5985,
+            "winrm_timeout": "4h",
+            "shutdown_command": "shutdown /s /t 300 /f /d p:4:1 /c \"Packer Shutdown\"",
+            "shutdown_timeout" : "1h",
+            "floppy_files": [
+                "{{user `autounattend`}}",
+                "scripts/fixnetwork.ps1",
+                "scripts/setup_winrm_public.bat"
+            ]
         }
     ],
     "provisioners": [
@@ -39,15 +59,7 @@
         },
         {
             "type": "powershell",
-            "inline": ["New-Item -Path C:\\temp -ItemType directory"]
-        },
-        {
-            "type": "powershell",
             "inline": ["Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Wenzel/flare-vm/master/install.ps1' -OutFile 'C:\\Temp\\install.ps1'"]
-        },
-        {
-            "type": "powershell",
-            "inline": ["powershell.exe -ExecutionPolicy Unrestricted -File C:\\Temp\\install.ps1"]
         },
         {
             "type": "powershell",
