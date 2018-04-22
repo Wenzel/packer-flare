@@ -1,9 +1,9 @@
 {
     "builders": [
         {
-            "vm_name": "Windows_10_x64.qcow2",
             "type": "qemu",
             "accelerator":  "kvm",
+            "vm_name": "Windows_10_x64.qcow2",
             "iso_url": "{{user `iso_url`}}",
             "iso_checksum": "{{user `iso_checksum`}}",
             "iso_checksum_type": "{{user `iso_checksum_type`}}",
@@ -23,7 +23,7 @@
             "winrm_timeout": "4h",
             "disk_compression": false,
             "skip_compaction": true,
-            "shutdown_command": "shutdown /s /t 300 /f /d p:4:1 /c \"Packer Shutdown\"",
+            "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
             "shutdown_timeout" : "1h",
             "floppy_files": [
                 "{{user `autounattend`}}",
@@ -32,8 +32,9 @@
             ]
         },
         {
-            "vm_name": "Windows_10_x64.ovf",
             "type": "virtualbox-iso",
+            "guest_os_type": "Windows10_64",
+            "vm_name": "Windows_10_x64.ovf",
             "iso_url": "{{user `iso_url`}}",
             "iso_checksum": "{{user `iso_checksum`}}",
             "iso_checksum_type": "{{user `iso_checksum_type`}}",
@@ -43,8 +44,22 @@
             "winrm_password": "vagrant",
             "winrm_port": 5985,
             "winrm_timeout": "4h",
-            "shutdown_command": "shutdown /s /t 300 /f /d p:4:1 /c \"Packer Shutdown\"",
+            "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
             "shutdown_timeout" : "1h",
+            "vboxmanage": [
+                [
+                    "modifyvm",
+                    "{{.Name}}",
+                    "--memory",
+                    "4096"
+                ],
+                [
+                    "modifyvm",
+                    "{{.Name}}",
+                    "--cpus",
+                    "2"
+                ]
+            ],
             "floppy_files": [
                 "{{user `autounattend`}}",
                 "scripts/fixnetwork.ps1",
@@ -59,11 +74,11 @@
         },
         {
             "type": "powershell",
-            "inline": ["Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Wenzel/flare-vm/master/install.ps1' -OutFile 'C:\\Temp\\install.ps1'"]
+            "inline": ["Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Wenzel/flare-vm/master/install.ps1' -OutFile \"$env:TEMP\\install.ps1\""]
         },
         {
             "type": "powershell",
-            "inline": ["Remove-Item -Recurse C:\\Temp"]
+            "inline": ["powershell.exe -ExecutionPolicy Unrestricted -File $env:TEMP\\install.ps1"]
         },
         {
             "type": "windows-shell",
