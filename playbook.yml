@@ -1,0 +1,11 @@
+---
+- hosts: all
+  tasks:
+    - name: download FLARE install script
+      win_get_url:
+        url: https://raw.githubusercontent.com/Wenzel/flare-vm/master/install.ps1
+        dest: "C:\\Users\\{{ ansible_user_id }}\\Downloads\\install.ps1"
+
+    - name: setup FLARE VM
+      win_command: powershell.exe -ExecutionPolicy Unrestricted -File "C:\\Users\\{{ ansible_user_id }}\\Downloads\\install.ps1"
+

@@ -69,28 +69,12 @@
     ],
     "provisioners": [
         {
-            "type": "windows-shell",
-            "inline": ["reg ADD HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU /v NoAutoUpdate /t REG_DWORD /d 1 /f"]
-        },
-        {
-            "type": "powershell",
-            "inline": ["Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Wenzel/flare-vm/master/install.ps1' -OutFile \"$env:TEMP\\install.ps1\""]
-        },
-        {
-            "type": "powershell",
-            "inline": ["powershell.exe -ExecutionPolicy Unrestricted -File $env:TEMP\\install.ps1"]
-        },
-        {
-            "type": "windows-restart",
-            "restart_timeout": "15m"
-        },
-        {
-            "type": "windows-shell",
-            "inline": ["reg ADD HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU /v NoAutoUpdate /t REG_DWORD /d 0 /f"]
-        },
-        {
-            "type": "windows-shell",
-            "inline": ["reg add HKLM\\SYSTEM\\CurrentControlSet\\services\\WinRM /v Start /t REG_DWORD /d 4 /f"]
+            "type": "ansible",
+            "playbook_file": "./playbook.yml",
+            "extra_arguments": [
+                "--connection", "packer",
+                "--extra-vars", "ansible_shell_type=powershell ansible_shell_executable=None"
+            ]
         }
     ],
     "variables": {
