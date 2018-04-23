@@ -2,7 +2,7 @@
 
 Write-Host 'Downloading Service Pack 1...'
 
-$output = 'C:\Windows\Temp'
+$output = "$env:TEMP"
 $filename = 'win7sp1.exe'
 
 # create $output

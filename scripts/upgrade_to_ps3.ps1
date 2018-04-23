@@ -23,7 +23,8 @@ if ($PSVersionTable.psversion.Major -ge 3)
     Exit
 }
 
-$output = "C:\temp"
+$output = "$env:TEMP"
+
 
 function download-file
 {
@@ -87,13 +88,10 @@ else
 }
 
 $filename = $DownLoadUrl.Split('/')[-1]
-$cabname = $filename.Replace('msu', 'cab')
 write-host "Downloading Powershell 3..."
 download-file $downloadurl "$output\$filename"
 
 write-host "Installing Powershell 3..."
-
-wusa "$output\$filename" /extract:"$output"
-dism /online /add-package /NoRestart /PackagePath:"$output\$cabname"
+Start-Process -FilePath "$output\$filename" -ArgumentList "/quiet /norestart" -Wait
 
 write-host "Powershell 3 installed."
