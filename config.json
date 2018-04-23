@@ -1,0 +1,6 @@
+{
+    "headless": "true",
+    "cpus": "2",
+    "memory_size": "4096",
+    "disk_size": "61440"
+}
